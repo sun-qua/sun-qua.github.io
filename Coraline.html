@@ -3,200 +3,459 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coraline Movie Quote Generator</title>
+    <title>Coraline Quote Generator</title>
     <style>
-        /* Minimal layout and clean typography */
+        :root {
+            /* Pink Palace Twilight Theme Palette */
+            --bg-gradient: radial-gradient(circle at 50% 30%, #201736 0%, #0d081a 75%, #05030a 100%);
+            --card-bg: rgba(23, 17, 39, 0.85);
+            --card-border: #cba358;
+            --text-main: #f0e6d2;
+            --text-muted: #a397bb;
+            --accent-gold: #e5b95c;
+            --accent-gold-glow: rgba(229, 185, 92, 0.35);
+            --button-bg: #2d2247;
+            --button-text: #f5edd8;
+            --button-hover: #3b2d5d;
+            --button-eye: #151024;
+            --badge-bg: rgba(229, 185, 92, 0.15);
+            --badge-text: #f1cf81;
+            --particle-color: rgba(229, 185, 92, 0.4);
+            --box-shadow-color: rgba(0, 0, 0, 0.6);
+        }
+
+        /* Other World Eerie Glowing Theme */
+        body.other-world {
+            --bg-gradient: radial-gradient(circle at 50% 40%, #09202c 0%, #041018 70%, #010609 100%);
+            --card-bg: rgba(7, 26, 36, 0.88);
+            --card-border: #00f0ff;
+            --text-main: #e2fdff;
+            --text-muted: #6fabb3;
+            --accent-gold: #00e5ff;
+            --accent-gold-glow: rgba(0, 229, 255, 0.45);
+            --button-bg: #0c3344;
+            --button-text: #cbf9ff;
+            --button-hover: #13485f;
+            --button-eye: #03131c;
+            --badge-bg: rgba(0, 240, 255, 0.15);
+            --badge-text: #66efff;
+            --particle-color: rgba(0, 240, 255, 0.45);
+            --box-shadow-color: rgba(0, 240, 255, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, box-shadow 0.4s ease;
+        }
+
         body {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f7f7f8;
-            color: #1a1a1a;
+            background: var(--bg-gradient);
+            color: var(--text-main);
             margin: 0;
             padding: 1.5rem;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            box-sizing: border-box;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Floating particles / fireflies in background */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--particle-color);
+            pointer-events: none;
+            animation: float 12s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0) scale(1); opacity: 0.2; }
+            50% { transform: translateY(-40px) translateX(25px) scale(1.4); opacity: 0.8; }
         }
 
         main {
-            max-width: 560px;
+            max-width: 620px;
             width: 100%;
-            background-color: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
+            background-color: var(--card-bg);
+            border: 2px dashed var(--card-border);
+            border-radius: 16px;
             padding: 2.5rem 2rem;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 12px 40px var(--box-shadow-color), inset 0 0 20px rgba(0, 0, 0, 0.3);
             text-align: center;
+            position: relative;
+            backdrop-filter: blur(8px);
+            z-index: 10;
+        }
+
+        /* Decorative Header with CSS-drawn Button Eye */
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .button-eye-icon {
+            width: 28px;
+            height: 28px;
+            background: var(--button-eye);
+            border: 2px solid var(--accent-gold);
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 0 10px var(--accent-gold-glow);
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        /* 4 Button Holes & Thread */
+        .button-eye-icon::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 12px;
+            height: 12px;
+            transform: translate(-50%, -50%);
+            background: 
+                radial-gradient(circle, var(--accent-gold) 1.5px, transparent 2px) 0 0 / 6px 6px,
+                radial-gradient(circle, var(--accent-gold) 1.5px, transparent 2px) 6px 0 / 6px 6px,
+                radial-gradient(circle, var(--accent-gold) 1.5px, transparent 2px) 0 6px / 6px 6px,
+                radial-gradient(circle, var(--accent-gold) 1.5px, transparent 2px) 6px 6px / 6px 6px;
         }
 
         h1 {
-            font-size: 1.35rem;
-            font-weight: 600;
-            margin-top: 0;
-            margin-bottom: 2rem;
-            color: #2d3748;
-            letter-spacing: -0.01em;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+            color: var(--accent-gold);
+            letter-spacing: 0.04em;
+            text-shadow: 0 0 12px var(--accent-gold-glow);
         }
 
-        .quote-container {
-            margin-bottom: 2rem;
-            min-height: 110px;
+        /* Theme Toggle Pill */
+        .theme-toggle-wrap {
+            margin-bottom: 1.75rem;
+        }
+
+        .toggle-btn {
+            background: transparent;
+            border: 1px solid var(--card-border);
+            color: var(--text-muted);
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .toggle-btn:hover {
+            color: var(--text-main);
+            border-color: var(--accent-gold);
+        }
+
+        /* Quote Card Container */
+        .quote-card {
+            min-height: 140px;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            align-items: center;
+            margin-bottom: 2rem;
+            position: relative;
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .quote-card.fade-out {
+            opacity: 0;
+            transform: translateY(8px);
         }
 
         blockquote {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             font-style: italic;
-            line-height: 1.5;
-            margin: 0 0 1rem 0;
-            color: #2d3748;
+            line-height: 1.6;
+            margin: 0 0 1.25rem 0;
+            color: var(--text-main);
+            quotes: "“" "”";
         }
 
-        .attribution {
-            font-size: 0.9rem;
+        blockquote::before { content: open-quote; color: var(--accent-gold); font-size: 1.6rem; margin-right: 4px; }
+        blockquote::after { content: close-quote; color: var(--accent-gold); font-size: 1.6rem; margin-left: 4px; }
+
+        .meta-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .character-badge {
+            background: var(--badge-bg);
+            color: var(--badge-text);
+            padding: 0.3rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.82rem;
             font-weight: 600;
-            color: #718096;
-            margin: 0;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.03em;
+            border: 1px solid var(--accent-gold-glow);
         }
 
-        button {
-            background-color: #2d3748;
-            color: #ffffff;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            font-size: 0.95rem;
+        .deck-counter {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        /* Actions Bar */
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: var(--button-bg);
+            color: var(--button-text);
+            border: 1.5px solid var(--accent-gold);
+            padding: 0.85rem 1.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: inherit;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px var(--box-shadow-color);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            background: var(--button-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--accent-gold-glow);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--text-muted);
+            padding: 0.75rem 1.25rem;
+            font-size: 0.9rem;
             font-weight: 500;
             font-family: inherit;
-            border-radius: 6px;
+            border-radius: 30px;
             cursor: pointer;
         }
 
-        button:hover {
-            background-color: #1a202c;
+        .btn-secondary:hover {
+            color: var(--text-main);
+            border-color: var(--text-main);
         }
 
-        button:active {
-            background-color: #000000;
+        /* Toast notification for copy action */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--button-eye);
+            color: var(--accent-gold);
+            border: 1px solid var(--accent-gold);
+            padding: 0.6rem 1.4rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            z-index: 100;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
         }
     </style>
 </head>
 <body>
 
-    <main>
-        <h1>Coraline Movie Quotes</h1>
+    <!-- Background CSS particle motes -->
+    <div class="particle" style="width: 6px; height: 6px; top: 15%; left: 10%; animation-delay: 0s;"></div>
+    <div class="particle" style="width: 8px; height: 8px; top: 70%; left: 85%; animation-delay: 3s;"></div>
+    <div class="particle" style="width: 5px; height: 5px; top: 80%; left: 20%; animation-delay: 6s;"></div>
+    <div class="particle" style="width: 7px; height: 7px; top: 25%; left: 80%; animation-delay: 9s;"></div>
 
-        <div class="quote-container">
-            <blockquote id="quote-text"></blockquote>
-            <p id="quote-author" class="attribution"></p>
+    <main>
+        <!-- Header with stitched button eye icon -->
+        <div class="header-container">
+            <span class="button-eye-icon" aria-hidden="true"></span>
+            <h1>Coraline Movie Quotes</h1>
+            <span class="button-eye-icon" aria-hidden="true"></span>
         </div>
 
-        <button id="new-quote-btn">New Quote</button>
+        <!-- Mode Toggle -->
+        <div class="theme-toggle-wrap">
+            <button id="theme-toggle" class="toggle-btn" aria-label="Toggle visual theme">
+                <span id="theme-icon">🔮</span>
+                <span id="theme-text">Switch to Other World Mode</span>
+            </button>
+        </div>
+
+        <!-- Dynamic Quote Card -->
+        <div id="quote-card" class="quote-card">
+            <blockquote id="quote-text">Loading quote...</blockquote>
+            <div class="meta-row">
+                <span id="quote-author" class="character-badge">— Character</span>
+                <span id="quote-counter" class="deck-counter">Quote 1 of 25</span>
+            </div>
+        </div>
+
+        <!-- Action Controls -->
+        <div class="controls">
+            <button id="new-quote-btn" class="btn-primary">
+                <span class="button-eye-icon" style="width: 16px; height: 16px; border-width: 1.5px;"></span>
+                New Quote
+            </button>
+            <button id="copy-btn" class="btn-secondary">Copy Quote</button>
+        </div>
     </main>
 
+    <div id="toast" class="toast">Quote copied to clipboard!</div>
+
     <script>
-        // Collection of iconic quotes from Coraline (2009)
+        // Expanded library of 25 authentic quotes from Coraline (2009)
         const quotes = [
-            {
-                quote: "You're not my mother. My mother doesn't have buttons for eyes.",
-                character: "Coraline Jones"
-            },
-            {
-                quote: "Be careful what you wish for.",
-                character: "The Cat"
-            },
-            {
-                quote: "They say even the proudest spirit can be broken... with love.",
-                character: "The Other Mother / The Beldam"
-            },
-            {
-                quote: "I'm real enough to save your life!",
-                character: "Wybie Lovat"
-            },
-            {
-                quote: "We are the mice! And we say: do not go through the little door!",
-                character: "Mr. Bobinsky"
-            },
-            {
-                quote: "You know, I could stay here forever. If you want me to.",
-                character: "Coraline Jones"
-            },
-            {
-                quote: "You're in danger, girl.",
-                character: "The Cat"
-            },
-            {
-                quote: "I'm Spink, she's Forcible. We're retired actresses.",
-                character: "Miss Spink"
-            },
-            {
-                quote: "I don't want whatever I want. Nobody does. Not really. What fun would it be if I just got everything I ever wanted?",
-                character: "Coraline Jones"
-            },
-            {
-                quote: "The tea leaves tell us you are in terrible danger, my dear.",
-                character: "Miss Spink & Miss Forcible"
-            },
-            {
-                quote: "She wants something to love, I think. Something that isn't her. Or maybe she just wants something to eat.",
-                character: "The Cat"
-            },
-            {
-                quote: "You set up a trap for me, didn't you? You didn't want me to get away!",
-                character: "Coraline Jones"
-            },
-            {
-                quote: "Black cats are bad luck, you know... or maybe good luck?",
-                character: "Wybie Lovat"
-            },
-            {
-                quote: "Challen-ging me, are you?",
-                character: "The Other Mother / The Beldam"
-            },
-            {
-                quote: "The famous Bobinsky! Circus of the jumping mice!",
-                character: "Mr. Bobinsky"
-            },
-            {
-                quote: "You have your mother's eyes... No, wait, those are button eyes!",
-                character: "Wybie Lovat"
-            },
-            {
-                quote: "You know, I love you.",
-                character: "The Other Mother / The Beldam"
-            },
-            {
-                quote: "I'm not gonna lose you. Neither of you.",
-                character: "Coraline Jones"
-            }
+            { quote: "Cats don't have names. Now, you people have names. That's because you don't know who you are. We know who we are, so we don't need names.", character: "The Cat" },
+            { quote: "You're not my mother. My mother doesn't have buttons for eyes.", character: "Coraline Jones" },
+            { quote: "Be careful what you wish for.", character: "The Cat" },
+            { quote: "We're so glad you decided to stay. You can stay forever and always, if you want to. There's just one tiny little thing we need to do...", character: "The Other Mother" },
+            { quote: "Why would she want you? She probably wants something to love, I should think. Something that isn't her. Or maybe she just wants something to eat.", character: "The Cat" },
+            { quote: "Making up stories is one thing, Coraline, but lying is another.", character: "Mel Jones" },
+            { quote: "I don't think I've ever seen a real live ghost before.", character: "Coraline Jones" },
+            { quote: "Look, Coraline, I'm not even supposed to be talking to you. My grandma says it's dangerous.", character: "Wybie Lovat" },
+            { quote: "You see, Caroline, the mice say you are in terrible danger.", character: "Mr. Bobinsky" },
+            { quote: "My name isn't Caroline! It's Coraline! Coraline Jones!", character: "Coraline Jones" },
+            { quote: "She spied on our lives through the little doll's eyes, and saw that we weren't happy. So she lured us away with treasures and treats...", character: "The Ghost Children" },
+            { quote: "Black is traditional, of course, but if you'd prefer pink, or vermilion, or chartreuse... though you might make me jealous!", character: "The Other Mother" },
+            { quote: "You're just a copy she made of the real Wybie! You're not even real!", character: "Coraline Jones" },
+            { quote: "Well, you're the expert, Dad.", character: "Coraline Jones" },
+            { quote: "Sometimes when I'm bored, I go out and look for water. With a dowsing rod.", character: "Coraline Jones" },
+            { quote: "Everything in this world is a trap. You shouldn't have come back here.", character: "The Cat" },
+            { quote: "Bad things happen in threes, Caroline. You're in terrible danger!", character: "Miss Spink" },
+            { quote: "Don't leave me! Don't leave me! I'll die without you!", character: "The Other Mother" },
+            { quote: "How can you walk away from something and still come back to it?", character: "Coraline Jones" },
+            { quote: "A challenge, then! You're on, little doll.", character: "The Other Mother" },
+            { quote: "They say even the proudest spirit can be broken... with love.", character: "The Other Mother" },
+            { quote: "I don't want whatever I want. Nobody does. Not really. What fun would it be if I just got everything I ever wanted?", character: "Coraline Jones" },
+            { quote: "I'm not scared of you! You're just a coward!", character: "Coraline Jones" },
+            { quote: "You're a terrible liar, Coraline.", character: "The Cat" },
+            { quote: "The famous Bobinsky! Circus of the jumping mice!", character: "Mr. Bobinsky" }
         ];
 
-        let lastIndex = -1;
+        // State variables for deck shuffling without repeats
+        let deck = [];
+        let currentDeckIndex = 0;
+        let currentQuoteObj = null;
 
-        // Displays a random quote, ensuring no consecutive repetition
-        function displayRandomQuote() {
-            let randomIndex;
-            
-            // Loop until a different quote index is selected
-            do {
-                randomIndex = Math.floor(Math.random() * quotes.length);
-            } while (randomIndex === lastIndex && quotes.length > 1);
-
-            lastIndex = randomIndex;
-
-            const selectedQuote = quotes[randomIndex];
-            document.getElementById('quote-text').textContent = `"${selectedQuote.quote}"`;
-            document.getElementById('quote-author').textContent = `— ${selectedQuote.character}`;
+        // Shuffle deck using Fisher-Yates algorithm
+        function resetDeck() {
+            deck = quotes.map((_, index) => index);
+            for (let i = deck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [deck[i], deck[j]] = [deck[j], deck[i]];
+            }
+            currentDeckIndex = 0;
         }
 
-        // Initialize on load and bind button click listener
+        // Display next quote with smooth transition
+        function displayNextQuote() {
+            const card = document.getElementById('quote-card');
+            card.classList.add('fade-out');
+
+            setTimeout(() => {
+                if (currentDeckIndex >= deck.length) {
+                    resetDeck();
+                }
+
+                const quoteIndex = deck[currentDeckIndex];
+                currentQuoteObj = quotes[quoteIndex];
+
+                document.getElementById('quote-text').textContent = currentQuoteObj.quote;
+                document.getElementById('quote-author').textContent = `— ${currentQuoteObj.character}`;
+                document.getElementById('quote-counter').textContent = `Quote ${currentDeckIndex + 1} of ${quotes.length}`;
+
+                currentDeckIndex++;
+                card.classList.remove('fade-out');
+            }, 300);
+        }
+
+        // Copy quote functionality using execCommand fallback
+        function copyQuote() {
+            if (!currentQuoteObj) return;
+            const fullText = `"${currentQuoteObj.quote}" — ${currentQuoteObj.character}`;
+            
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = fullText;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            
+            try {
+                document.execCommand('copy');
+                showToast('Quote copied to clipboard!');
+            } catch (err) {
+                showToast('Failed to copy quote');
+            } finally {
+                document.body.removeChild(tempTextArea);
+            }
+        }
+
+        // Toast feedback
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        // Theme Toggle
+        function toggleTheme() {
+            const isOtherWorld = document.body.classList.toggle('other-world');
+            document.getElementById('theme-icon').textContent = isOtherWorld ? '🕸️' : '🔮';
+            document.getElementById('theme-text').textContent = isOtherWorld 
+                ? 'Switch to Pink Palace Mode' 
+                : 'Switch to Other World Mode';
+        }
+
+        // Initialization
         window.addEventListener('DOMContentLoaded', () => {
-            displayRandomQuote();
-            document.getElementById('new-quote-btn').addEventListener('click', displayRandomQuote);
+            resetDeck();
+            displayNextQuote();
+
+            document.getElementById('new-quote-btn').addEventListener('click', displayNextQuote);
+            document.getElementById('copy-btn').addEventListener('click', copyQuote);
+            document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+
+            // Allow pressing Spacebar to generate new quote
+            window.addEventListener('keydown', (e) => {
+                if (e.code === 'Space' && e.target === document.body) {
+                    e.preventDefault();
+                    displayNextQuote();
+                }
+            });
         });
     </script>
 </body>
