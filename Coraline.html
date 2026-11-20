@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coraline Movie Quote Generator</title>
+    <style>
+        /* Minimal layout and clean typography */
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f7f7f8;
+            color: #1a1a1a;
+            margin: 0;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        main {
+            max-width: 560px;
+            width: 100%;
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 2.5rem 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.35rem;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 2rem;
+            color: #2d3748;
+            letter-spacing: -0.01em;
+        }
+
+        .quote-container {
+            margin-bottom: 2rem;
+            min-height: 110px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        blockquote {
+            font-size: 1.2rem;
+            font-style: italic;
+            line-height: 1.5;
+            margin: 0 0 1rem 0;
+            color: #2d3748;
+        }
+
+        .attribution {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #718096;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        button {
+            background-color: #2d3748;
+            color: #ffffff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            font-family: inherit;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #1a202c;
+        }
+
+        button:active {
+            background-color: #000000;
+        }
+    </style>
+</head>
+<body>
+
+    <main>
+        <h1>Coraline Movie Quotes</h1>
+
+        <div class="quote-container">
+            <blockquote id="quote-text"></blockquote>
+            <p id="quote-author" class="attribution"></p>
+        </div>
+
+        <button id="new-quote-btn">New Quote</button>
+    </main>
+
+    <script>
+        // Collection of iconic quotes from Coraline (2009)
+        const quotes = [
+            {
+                quote: "You're not my mother. My mother doesn't have buttons for eyes.",
+                character: "Coraline Jones"
+            },
+            {
+                quote: "Be careful what you wish for.",
+                character: "The Cat"
+            },
+            {
+                quote: "They say even the proudest spirit can be broken... with love.",
+                character: "The Other Mother / The Beldam"
+            },
+            {
+                quote: "I'm real enough to save your life!",
+                character: "Wybie Lovat"
+            },
+            {
+                quote: "We are the mice! And we say: do not go through the little door!",
+                character: "Mr. Bobinsky"
+            },
+            {
+                quote: "You know, I could stay here forever. If you want me to.",
+                character: "Coraline Jones"
+            },
+            {
+                quote: "You're in danger, girl.",
+                character: "The Cat"
+            },
+            {
+                quote: "I'm Spink, she's Forcible. We're retired actresses.",
+                character: "Miss Spink"
+            },
+            {
+                quote: "I don't want whatever I want. Nobody does. Not really. What fun would it be if I just got everything I ever wanted?",
+                character: "Coraline Jones"
+            },
+            {
+                quote: "The tea leaves tell us you are in terrible danger, my dear.",
+                character: "Miss Spink & Miss Forcible"
+            },
+            {
+                quote: "She wants something to love, I think. Something that isn't her. Or maybe she just wants something to eat.",
+                character: "The Cat"
+            },
+            {
+                quote: "You set up a trap for me, didn't you? You didn't want me to get away!",
+                character: "Coraline Jones"
+            },
+            {
+                quote: "Black cats are bad luck, you know... or maybe good luck?",
+                character: "Wybie Lovat"
+            },
+            {
+                quote: "Challen-ging me, are you?",
+                character: "The Other Mother / The Beldam"
+            },
+            {
+                quote: "The famous Bobinsky! Circus of the jumping mice!",
+                character: "Mr. Bobinsky"
+            },
+            {
+                quote: "You have your mother's eyes... No, wait, those are button eyes!",
+                character: "Wybie Lovat"
+            },
+            {
+                quote: "You know, I love you.",
+                character: "The Other Mother / The Beldam"
+            },
+            {
+                quote: "I'm not gonna lose you. Neither of you.",
+                character: "Coraline Jones"
+            }
+        ];
+
+        let lastIndex = -1;
+
+        // Displays a random quote, ensuring no consecutive repetition
+        function displayRandomQuote() {
+            let randomIndex;
+            
+            // Loop until a different quote index is selected
+            do {
+                randomIndex = Math.floor(Math.random() * quotes.length);
+            } while (randomIndex === lastIndex && quotes.length > 1);
+
+            lastIndex = randomIndex;
+
+            const selectedQuote = quotes[randomIndex];
+            document.getElementById('quote-text').textContent = `"${selectedQuote.quote}"`;
+            document.getElementById('quote-author').textContent = `— ${selectedQuote.character}`;
+        }
+
+        // Initialize on load and bind button click listener
+        window.addEventListener('DOMContentLoaded', () => {
+            displayRandomQuote();
+            document.getElementById('new-quote-btn').addEventListener('click', displayRandomQuote);
+        });
+    </script>
+</body>
+</html>
